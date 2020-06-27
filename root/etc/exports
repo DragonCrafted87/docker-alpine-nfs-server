@@ -1,1 +1,1 @@
-/nfs_share  *(ro,fsid=0)
+/nfs_share  *(ro,fsid=0,no_subtree_check)

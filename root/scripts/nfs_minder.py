@@ -32,8 +32,7 @@ signal(SIGTERM, stop_container)
 
 def main():
   logger = create_logger(PurePath(__file__).stem)
-  call = 'mount' '-t' 'nfsd' 'nfds' '/proc/fs/nfsd'
-  run(call)
+  run(['mount', '-t', 'nfsd', 'nfds', '/proc/fs/nfsd'])
 
   logger.info('Starting rpcbind.')
   Popen(['rpcbind', '-i']).pid
