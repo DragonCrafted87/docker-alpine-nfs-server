@@ -11,7 +11,7 @@ def main():
   logger.info(f'{listdir("/nfs_share/")}')
 
   base_directory = Path('/nfs_share')
-  nfs_permisions = '*(rw,sync,no_subtree_check,no_auth_nlm,insecure,no_root_squash)'
+  nfs_permisions = '*(rw,sync,no_subtree_check,no_auth_nlm,insecure,no_root_squash,crossmnt)'
 
   exports_file_path = Path('/etc/exports')
   with exports_file_path.open('a') as exports_file:
