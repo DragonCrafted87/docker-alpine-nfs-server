@@ -8,11 +8,9 @@ from python_logger import create_logger #pylint: disable=import-error
 
 def main():
   logger = create_logger(Path(__file__).stem)
-
   logger.info(f'{listdir("/nfs_share/")}')
 
   base_directory = Path('/nfs_share')
-
   nfs_permisions = '*(rw,sync,no_subtree_check,no_auth_nlm,insecure,no_root_squash)'
 
   exports_file_path = Path('/etc/exports')
