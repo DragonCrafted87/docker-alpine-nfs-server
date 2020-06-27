@@ -14,14 +14,9 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 COPY root/. /
 
 RUN apk add --update nfs-utils && \
-    rm  -rf /tmp/* /var/cache/apk/* && \
+    rm -rf /var/cache/apk /tmp /sbin/halt /sbin/poweroff /sbin/reboot && \
+    mkdir -p /var/lib/nfs/rpc_pipefs /var/lib/nfs/v4recovery /nfs_share && \
     chmod +x /docker_service_init && \
     chmod +x /scripts/*
-
-EXPOSE 111/tcp 111/udp
-EXPOSE 2049/tcp 2049/udp
-EXPOSE 32765/tcp 32765/udp
-EXPOSE 32766/tcp 32766/udp
-EXPOSE 32767/tcp 32767/udp
 
 CMD ["/docker_service_init"]

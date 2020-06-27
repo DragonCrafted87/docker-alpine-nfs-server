@@ -32,27 +32,22 @@ signal(SIGTERM, stop_container)
 
 def main():
   logger = create_logger(PurePath(__file__).stem)
-  run(['mount', '-t', 'nfsd', 'nfds', '/proc/fs/nfsd'])
 
   logger.info('Starting rpcbind.')
-  Popen(['rpcbind', '-i']).pid
-  sleep(1)
+  Popen(['rpcbind', '-w']).pid
 
-  logger.info('Starting rpc.statd.')
-  Popen(['rpc.statd', '--no-notify', '--port', '32765', '--outgoing-port', '32766']).pid
-  sleep(1)
+  logger.info(run(['rpcinfo'], capture_output=True).stdout)
 
   logger.info('Starting rpc.nfsd.')
-  Popen(['rpc.nfsd', '--nfs-version', '3', '--no-nfs-version', '2', '--no-nfs-version', '4', '-d', '8']).pid
-  sleep(1)
-
-  logger.info('Starting rpc.mountd.')
-  Popen(['rpc.mountd', '--nfs-version', '3', '--no-nfs-version', '2', '--no-nfs-version', '4', '--port', '32767']).pid
-  sleep(1)
+  Popen(['rpc.nfsd', '--grace-time', '10' '--no-nfs-version', '3', '--no-nfs-version', '2', '--debug', '8']).pid
 
   logger.info('Starting exportfs.')
-  Popen(['exportfs', '-ra']).pid
-  sleep(1)
+  Popen(['exportfs', '-rv']).pid
+
+  logger.info(run(['exportfs'], capture_output=True).stdout)
+
+  logger.info('Starting rpc.mountd.')
+  Popen(['rpc.mountd', '--no-nfs-version', '3', '--no-nfs-version', '2', '--debug', 'all', '--no-udp']).pid
 
   # wait for the kill command
   while True:
