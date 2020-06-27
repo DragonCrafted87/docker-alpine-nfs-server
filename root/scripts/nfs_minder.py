@@ -23,7 +23,10 @@ def is_process_running(process_name):
 def stop_container(_signal_number, _stack_frame):
   logger = create_logger(PurePath(__file__).stem)
   logger.info('Stopping Container.')
+
+  system('exportfs -uav')
   system('rpc.nfsd 0')
+
   sleep(1)
   sys_exit(0)
 
@@ -38,8 +41,12 @@ def main():
 
   logger.info(run(['rpcinfo'], capture_output=True).stdout)
 
+  Popen(['rpc.idmapd']).pid
+  Popen(['rpc.gssd', '-v']).pid
+  Popen(['rpc.statd']).pid
+
   logger.info('Starting rpc.nfsd.')
-  Popen(['rpc.nfsd', '--grace-time', '10' '--no-nfs-version', '3', '--no-nfs-version', '2', '--debug', '8']).pid
+  Popen(['rpc.nfsd', ' --debug', '8', '--no-udp', '--no-nfs-version', '2', '--no-nfs-version', '3']).pid
 
   logger.info('Starting exportfs.')
   Popen(['exportfs', '-rv']).pid
@@ -47,11 +54,11 @@ def main():
   logger.info(run(['exportfs'], capture_output=True).stdout)
 
   logger.info('Starting rpc.mountd.')
-  Popen(['rpc.mountd', '--no-nfs-version', '3', '--no-nfs-version', '2', '--debug', 'all', '--no-udp']).pid
+  run(['rpc.mountd', '--foreground', '--no-nfs-version', '3', '--no-nfs-version', '2', '--debug', 'all', '--no-udp'])
 
-  # wait for the kill command
-  while True:
-    sleep(5)
+#  # wait for the kill command
+#  while True:
+#    sleep(5)
 
 if __name__ == "__main__":
   main()
