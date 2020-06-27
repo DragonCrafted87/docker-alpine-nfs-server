@@ -1,0 +1,8 @@
+#!/usr/bin/python3
+
+from os import system
+from os import execv
+
+system('/scripts/set_system_timezone.py')
+system('/scripts/set_share_list.py')
+execv('/scripts/nfs_minder.py', ['nfs_minder'])
